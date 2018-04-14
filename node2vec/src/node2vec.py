@@ -13,6 +13,7 @@ class Graph():
 	def node2vec_walk(self, walk_length, start_node):
 		'''
 		Simulate a random walk starting from start node.
+		really, it is forming a sentence
 		'''
 		G = self.G
 		alias_nodes = self.alias_nodes
@@ -20,7 +21,7 @@ class Graph():
 
 		walk = [start_node]
 
-		while len(walk) < walk_length:
+		while len(walk) < walk_length:  # walk_length is a length of a sentence
 			cur = walk[-1]
 			cur_nbrs = sorted(G.neighbors(cur))
 			if len(cur_nbrs) > 0:
@@ -43,14 +44,14 @@ class Graph():
 		G = self.G
 		walks = []
 		nodes = list(G.nodes())
-		# print 'Walk iteration:'
+		print ('Walk iteration:')
 		for walk_iter in range(num_walks):
-			# print str(walk_iter+1), '/', str(num_walks)
+			print (str(walk_iter+1), '/', str(num_walks))
 			random.shuffle(nodes)
 			for node in nodes:
 				walks.append(self.node2vec_walk(walk_length=walk_length, start_node=node))
 
-		return walks
+		return walks  # walks are sentences  
 
 	def get_alias_edge(self, src, dst):
 		'''

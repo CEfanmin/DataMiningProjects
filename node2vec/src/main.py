@@ -96,11 +96,13 @@ def main(args):
 	Pipeline for representational learning for all nodes in a graph.
 	'''
 	nx_G = read_graph()
-	# nx.draw(nx_G, pos=nx.spring_layout(nx_G))
-	# plt.show()
+	nx.draw(nx_G, pos=nx.spring_layout(nx_G))
+	plt.show()
 	G = node2vec.Graph(nx_G, args.directed, args.p, args.q)
 	G.preprocess_transition_probs()
 	walks = G.simulate_walks(args.num_walks, args.walk_length)  # every walk is a sentence, walks is a set of sentence.
+	print("len of walks is: ", len(walks))
+	# print(walks)
 	learn_embeddings(walks)
 
 if __name__ == "__main__":

@@ -20,9 +20,8 @@ nx.draw(G, with_labels=True)
 plt.show()
 G.clear()
 
-G.add_edge(1,2)
-H = nx.DiGraph(G)
-edgelist = [('n2','n1'), ('n2','n3'), ('n1','n3')]
+
+edgelist = [('n1','n2'), ('n1','n3'), ('n2','n3')]
 H = nx.Graph(edgelist)
 nx.draw(H, with_labels= True)
 plt.show()

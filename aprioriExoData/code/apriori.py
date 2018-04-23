@@ -71,9 +71,9 @@ end_time = time.clock() #计时结束
 print(u'\n转换完毕，用时：%0.2f秒' %(end_time-start_time))
 del b, listb #删除中间变量b, listb, 节省内存
 
-support = 0.25 #最小支持度
+support = 0.33 #最小支持度
 confidence = 0.95 #最小置信度
-ms = '---' #连接符，默认'--'，用来区分不同元素，如A--B。需要保证原始表格中不含有该字符
+ms = '--' #连接符，默认'--'，用来区分不同元素，如A--B。需要保证原始表格中不含有该字符
 
 start = time.clock() #计时开始
 print(u'\n开始搜索关联规则...')

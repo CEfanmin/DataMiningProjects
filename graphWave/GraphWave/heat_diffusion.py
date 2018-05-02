@@ -132,7 +132,7 @@ def plot_centered_heat_diffusion(node,mode,G,list_heat_df,type_graph="nx",savefi
     plt.sci(nodes)
     plt.colorbar()
     if savefig==True:
-        plt.savefig("plots/heat"+str(mode)+"_nd"+str(node)+".png")
+        plt.savefig("../../plots/heat"+str(mode)+"_nd"+str(node)+".png")
     return True
 
 def compare_heat_profiles(node1,node2, mode,list_heat_df,savefig=False):
@@ -140,7 +140,7 @@ def compare_heat_profiles(node1,node2, mode,list_heat_df,savefig=False):
     plt.plot(np.sort(Sf.loc[:,node1]),c="red",label=str(node1))
     plt.plot(np.sort(Sf.loc[:,node2]),c="blue",label=str(node2))
     if savefig==True:
-        plt.savefig("plots/comp_heat_profile"+str(mode)+"_nds"+str(node1)+"_"+str(node2)+".png")
+        plt.savefig("../../plots/comp_heat_profile"+str(mode)+"_nds"+str(node1)+"_"+str(node2)+".png")
     return True
     #np.sort(Sf.loc[:,node1]),np.sort(Sf[:node2])
 
@@ -153,7 +153,7 @@ def compare_heat_profiles_qqplot(node1,node2, mode,list_heat_df,savefig=False):
     plt.xlabel("node "+str(node1))
     plt.ylabel("node "+str(node2))
     if savefig==True:
-        plt.savefig("plots/qq_heat_profile"+str(mode)+"_nds"+str(node1)+"_"+str(node2)+".png")
+        plt.savefig("../../plots/qq_heat_profile"+str(mode)+"_nds"+str(node1)+"_"+str(node2)+".png")
     return True
     #np.sort(Sf.loc[:,node1]),np.sort(Sf[:node2])
  
@@ -257,7 +257,7 @@ def compare_heat_histograms(node1,node2,mode, list_heat_df,savefig=False):
     plt.legend(loc="upper right",fontsize=7)
     plt.title("Comparison of the heat profiles for nodes "+str(node1)+" and "+str(node2) )
     if savefig==True:
-        plt.savefig("plots/comp_heat_hist"+str(mode)+"_nds"+str(node1)+"_"+str(node2)+".png")
+        plt.savefig("../../plots/comp_heat_hist"+str(mode)+"_nds"+str(node1)+"_"+str(node2)+".png")
     return True
 
     
@@ -266,5 +266,7 @@ def plot_heat_distribution(list_heat_df,node,colors=["salmon", "orange", "lightb
     for mode in range(len(list_heat_df)):
         plt.hist(1.0/np.max((list_heat_df[mode]).loc[:,node])*(list_heat_df[mode]).loc[:,node], bins=20,color=colors[mode],label="mode "+str(mode)+" for node "+str(node),alpha=0.5)
     plt.legend(loc="upper right",fontsize=7)
-    plt.title("Comparison of the heat profiles for nodes "+str(node) )    
+    plt.title("Comparison of the heat profiles for nodes "+str(node))
+    plt.savefig("../../plots/heat_profiles_for_nodes"+str(node)+".png")
+    # plt.show()    
     return True

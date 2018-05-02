@@ -179,7 +179,6 @@ def featurize_characteristic_function(heat_print,t=[],nodes=[]):
     Returns
     -------
     chi:            feature matrix (pd DataFrame)
-    
     '''
     
     if len(t)==0:

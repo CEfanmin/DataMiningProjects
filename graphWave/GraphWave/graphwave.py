@@ -51,9 +51,18 @@ def graphwave(G, taus, t=range(0,100,2), type_graph="nx",verbose=False,**kwargs)
             smin=np.where(taus<smin)[0][-1]
         else:
             smin=0
-        if verbose: print "smax=",smax, " and smin=", smin
+        
+        print "smax=",smax, " and smin=", smin
         taus=taus[smin:smax]
+
     ### Compute the heat wavelets
     heat_print=heat_diffusion(G,taus,diff_type="immediate",type_graph=type_graph)
+    # nodes=range(heat_print[0].shape[0])
+    # for i in range(len(nodes)):
+    #     index=nodes[i]
+    #     plot_centered_heat_diffusion(node=index,mode=3, G=G,list_heat_df=heat_print,savefig=True)
+    #     # compare_heat_histograms(node1=index,node2=index+1,mode=0,list_heat_df=heat_print,savefig=True)
+    #     # plot_heat_distribution(list_heat_df=heat_print,node=index)
+    
     chi=featurize_characteristic_function(heat_print,t)
     return chi,heat_print, taus

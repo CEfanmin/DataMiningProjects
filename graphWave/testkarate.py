@@ -44,14 +44,13 @@ if __name__=="__main__":
     '''pipeline'''
     nx_G = read_graph()
     nx.draw(nx_G, pos=nx.spring_layout(nx_G))
-    plt.show()
+    # plt.show()
     chi, heat_print, taus=graphwave(nx_G, 'automatic', verbose=False)
     print(np.array(chi).shape)
-    pca=PCA(n_components=2)
-    trans_data=pca.fit_transform(StandardScaler().fit_transform(chi))
-    print(trans_data.shape)
-    pd.DataFrame(trans_data).to_csv('./karate-emb.csv')
+    # pca=PCA(n_components=2)
+    # trans_data=pca.fit_transform(StandardScaler().fit_transform(chi))
+    # print(trans_data.shape)
+    # pd.DataFrame(trans_data).to_csv('./karate-emb.csv')
 
     feture_data, id_data = load_data()
     visulization(feture_data, id_data)
-    

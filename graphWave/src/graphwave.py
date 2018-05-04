@@ -1,23 +1,10 @@
 import networkx as nx 
 import pandas as pd
 import matplotlib.pyplot as plt
-import sklearn as sk
-import matplotlib.pyplot as plt
-import sys
-import seaborn as sb
-
-from shapes.shapes import *
-from heat_diffusion import *
-from utils.graph_tools  import *
-from utils.utils import *
-from characteristic_functions import *
 import pygsp
 import numpy as np
-import networkx as nx 
-import matplotlib.pyplot as plt
-from utils.graph_tools import *
-from heat_diffusion import *
-from characteristic_functions import *
+from heat_diffusion import heat_diffusion
+from characteristic_functions import featurize_characteristic_function, characteristic_function
 
 def graphwave(G, taus, t=range(0,100,2), type_graph="nx",verbose=False,**kwargs):
     ''' wrapper function for computing the structural signatures using GraphWave
@@ -57,6 +44,7 @@ def graphwave(G, taus, t=range(0,100,2), type_graph="nx",verbose=False,**kwargs)
 
     ### Compute the heat wavelets
     heat_print=heat_diffusion(G,taus,diff_type="immediate",type_graph=type_graph)
+    # pd.DataFrame(heat_print).to_csv('./heat_wave.csv')
     # nodes=range(heat_print[0].shape[0])
     # for i in range(len(nodes)):
     #     index=nodes[i]

@@ -8,12 +8,11 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
-
-from GraphWave.graphwave import graphwave
+from graphwave import graphwave
 
 def read_graph():
     '''read graph'''
-    G = nx.read_edgelist('./karate-mirrored.edgelist',nodetype=int, create_using=nx.DiGraph())
+    G = nx.read_edgelist('../data/karate-mirrored.edgelist',nodetype=int, create_using=nx.DiGraph())
     for edge in G.edges():
         G[edge[0]][edge[1]]['weight'] = 1
 
@@ -22,7 +21,7 @@ def read_graph():
 
 def load_data():
     '''load data'''
-    raw_data = pd.read_csv('./karate-emb.csv')
+    raw_data = pd.read_csv('../data/karate-emb.csv')
     feture_data = raw_data.iloc[:,0:2]
     id_data = raw_data['id'].tolist()
     return feture_data, id_data
@@ -46,6 +45,7 @@ if __name__=="__main__":
     nx.draw(nx_G, pos=nx.spring_layout(nx_G))
     # plt.show()
     chi, heat_print, taus=graphwave(nx_G, 'automatic', verbose=False)
+    print('taus is:',taus)
     print(np.array(chi).shape)
     # pca=PCA(n_components=2)
     # trans_data=pca.fit_transform(StandardScaler().fit_transform(chi))

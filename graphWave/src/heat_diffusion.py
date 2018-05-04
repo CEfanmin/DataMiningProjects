@@ -7,12 +7,12 @@ import numpy as np
 import networkx as nx 
 import pandas as pd
 import matplotlib.pyplot as plt
+import csv
 
-
-def heat_diffusion(G,taus=[1, 10, 25, 50],diff_type="immediate",b=1,type_graph="pygsp"):
+def Heat_diffusion(G,taus=[1, 10, 25, 50],diff_type="immediate",b=1,type_graph="pygsp"):
     '''
-        This method computes the heat diffusion waves for each of the nodes
-     INPUT:
+    This method computes the heat diffusion waves for each of the nodes
+    INPUT:
     -----------------------
     G: Graph, can be of type networkx or pygsp
     taus: list of 4 scales for the wavelets. The higher the tau, the better the spread
@@ -60,13 +60,16 @@ def heat_diffusion(G,taus=[1, 10, 25, 50],diff_type="immediate",b=1,type_graph="
     
     heat={i:pd.DataFrame(np.zeros((N,N)), index=range(N)) for i in range(len(taus))}   
     for v in range(N):
-            ### for each node v , create a signal that corresponds to a Dirac of energy
-            ### centered around v and which propagates through the network
-            f=np.zeros(N)
-            f[v]=1
-            Sf_vec = Hk.analyze(f) ### creates the associated heat wavelets
-            Sf = Sf_vec.reshape((Sf_vec.size/len(taus), len(taus)), order='F')
-            for  i in range(len(taus)):
-                heat[i].iloc[:,v]=Sf[:,i] ### stores in different dataframes the results
+        # for each node v , create a signal that corresponds to a Dirac of energy
+        # centered around v and which propagates through the network
+        f=np.zeros(N)
+        f[v]=1  # node v is our heat source.
+        Sf_vec = Hk.analyze(f) # creates the associated heat wavelets
+        Sf = Sf_vec.reshape((Sf_vec.size/len(taus), len(taus)), order='F')
+        for i in range(len(taus)):
+            heat[i].iloc[:,v]=Sf[:,i] # stores in different dataframes the results
+    
+    for i in range(len(taus)):
+        heat[i].to_csv('../data/heatWave%s.csv'%i) # save svery scale heat wave
+    
     return [heat[i] for i in range(len(taus))]
-#return pd.DataFrame.from_dict(heat)

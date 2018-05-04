@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pygsp
 import numpy as np
-from heat_diffusion import heat_diffusion
+from heat_diffusion import Heat_diffusion
 from characteristic_functions import featurize_characteristic_function, characteristic_function
 
 def graphwave(G, taus, t=range(0,100,2), type_graph="nx",verbose=False,**kwargs):
@@ -43,8 +43,7 @@ def graphwave(G, taus, t=range(0,100,2), type_graph="nx",verbose=False,**kwargs)
         taus=taus[smin:smax]
 
     ### Compute the heat wavelets
-    heat_print=heat_diffusion(G,taus,diff_type="immediate",type_graph=type_graph)
-    # pd.DataFrame(heat_print).to_csv('./heat_wave.csv')
+    heat_print=Heat_diffusion(G,taus,diff_type="immediate",type_graph=type_graph)
     # nodes=range(heat_print[0].shape[0])
     # for i in range(len(nodes)):
     #     index=nodes[i]

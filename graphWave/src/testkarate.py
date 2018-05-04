@@ -50,7 +50,7 @@ if __name__=="__main__":
     # pca=PCA(n_components=2)
     # trans_data=pca.fit_transform(StandardScaler().fit_transform(chi))
     # print(trans_data.shape)
-    # pd.DataFrame(trans_data).to_csv('./karate-emb.csv')
+    # pd.DataFrame(trans_data).to_csv('../data/karate-emb.csv')
 
     feture_data, id_data = load_data()
     visulization(feture_data, id_data)

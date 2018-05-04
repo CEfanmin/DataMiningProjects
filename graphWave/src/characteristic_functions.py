@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def characteristic_function(sig,t,plot=False):
+def characteristic_function(sig,t,plot=False, taus=1, node=1):
     ''' function for computing the characteristic function associated to a signal at
         a point/ set of points t:
             f(sig,t)=1/len(sig)* [sum_{s in sig} exp(i*t*s)]
@@ -37,8 +37,11 @@ def characteristic_function(sig,t,plot=False):
             f[tt,2]=c.imag
         if plot==True:
             plt.figure()
-            plt.plot(f[:,1],f[:,2])
+            plt.plot(f[:,1],f[:,2], c='g')
             plt.title("characteristic function of the distribution")
+            plt.xlabel('real part')
+            plt.ylabel('image part')
+            plt.savefig('../figure/ChaFun_taus%s_node%s.png'%(taus, node))
 
     else:
         c=np.mean([np.exp(complex(0,t*sig[i])) for i in range(len(sig))])
@@ -66,15 +69,16 @@ def featurize_characteristic_function(heat_print,t=[],nodes=[]):
         t=t.tolist()
     if len(nodes)==0:
         nodes=range(heat_print[0].shape[0])
+    
     chi=np.empty((len(nodes),2*len(t)*len(heat_print)))
     for tau in range(len(heat_print)):
         sig=heat_print[tau]
         for i in range(len(nodes)):
             ind=nodes[i]
             s=sig.iloc[:,ind].tolist()
-            c=characteristic_function(s,t,plot=False)
-            ### Concatenate all the features into one big vector
+            c=characteristic_function(s,t,plot=True, taus=tau, node=i)
+            # Concatenate all the features into one big vector
             chi[i,tau*2*len(t):(tau+1)*2*len(t)]= np.reshape(c[:,1:],[1,2*len(t)])
-    #chi=pd.DataFrame(chi, index=[nodes[i] for i in range(len(nodes))])
+    # chi=pd.DataFrame(chi, index=[nodes[i] for i in range(len(nodes))])
     return chi
     

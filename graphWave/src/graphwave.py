@@ -23,7 +23,7 @@ def graphwave(G, taus, t=range(0,100,2), type_graph="nx",verbose=False,**kwargs)
     '''
     if type(taus)==str:
         taus=[0.5,0.7,0.8,0.9,1.0,1.1,1.3,1.5,1.7,1.9,2.0,2.1,2.3,2.5,2.7]+range(3,5)
-        #### Compute the optimal embedding
+        # Compute the optimal embedding
         Gg=pygsp.graphs.Graph(nx.adjacency_matrix(G),lap_type='normalized')
         Gg.compute_fourier_basis(recompute=True)
         l1=np.where(Gg.e>0.1/Gg.N) ### safety check to ensure that the graph is indeed connected
@@ -42,7 +42,7 @@ def graphwave(G, taus, t=range(0,100,2), type_graph="nx",verbose=False,**kwargs)
         print "smax=",smax, " and smin=", smin
         taus=taus[smin:smax]
 
-    ### Compute the heat wavelets
+    # Compute the heat wavelets
     heat_print=Heat_diffusion(G,taus,diff_type="immediate",type_graph=type_graph)
     # nodes=range(heat_print[0].shape[0])
     # for i in range(len(nodes)):

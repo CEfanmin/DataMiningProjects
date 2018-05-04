@@ -69,7 +69,7 @@ def Heat_diffusion(G,taus=[1, 10, 25, 50],diff_type="immediate",b=1,type_graph="
         for i in range(len(taus)):
             heat[i].iloc[:,v]=Sf[:,i] # stores in different dataframes the results
     
-    for i in range(len(taus)):
-        heat[i].to_csv('../data/heatWave%s.csv'%i) # save svery scale heat wave
-    
+    for i in range(len(taus)): # save svery scale heat wave
+        heat[i].to_csv('../data/heatWave%s.csv'%i) 
+
     return [heat[i] for i in range(len(taus))]

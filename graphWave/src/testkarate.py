@@ -40,7 +40,7 @@ def visulization(feture_data, id_data):
     plt.show()
 
 if __name__=="__main__":
-    '''pipeline'''
+    '''Pipeline and add PCA'''
     nx_G = read_graph()
     nx.draw(nx_G, pos=nx.spring_layout(nx_G))
     # plt.show()

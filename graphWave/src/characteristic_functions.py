@@ -76,7 +76,7 @@ def featurize_characteristic_function(heat_print,t=[],nodes=[]):
         for i in range(len(nodes)):
             ind=nodes[i]
             s=sig.iloc[:,ind].tolist()
-            c=characteristic_function(s,t,plot=True, taus=tau, node=i)
+            c=characteristic_function(s,t,plot=False, taus=tau, node=i)
             # Concatenate all the features into one big vector
             chi[i,tau*2*len(t):(tau+1)*2*len(t)]= np.reshape(c[:,1:],[1,2*len(t)])
     # chi=pd.DataFrame(chi, index=[nodes[i] for i in range(len(nodes))])

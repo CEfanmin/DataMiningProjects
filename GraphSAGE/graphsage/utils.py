@@ -20,8 +20,8 @@ N_WALKS=50
 def load_data(prefix, normalize=True, load_walks=False):
     G_data = json.load(open(prefix + "-G.json"))
     G = json_graph.node_link_graph(G_data)
-    nx.draw(G, pos=nx.spring_layout(G))
-    plt.show()
+    # nx.draw(G, pos=nx.spring_layout(G))
+    # plt.show()
     if isinstance(G.nodes()[0], int):
         conversion = lambda n : int(n)
     else:

@@ -146,10 +146,12 @@ class GraphConvolution(Layer):
         self.sparse_inputs = sparse_inputs
         self.featureless = featureless
         self.bias = bias
+        self.input_dim = input_dim
+        self.output_dim = output_dim
 
         # helper variable for sparse dropout
         self.num_features_nonzero = placeholders['num_features_nonzero']
-
+        
         with tf.variable_scope(self.name + '_vars'):
             for i in range(len(self.support)):
                 self.vars['weights_' + str(i)] = glorot([input_dim, output_dim],
@@ -162,7 +164,7 @@ class GraphConvolution(Layer):
 
     def _call(self, inputs):
         x = inputs
-
+        self.vars['trans_weight'] =glorot([self.input_dim, self.output_dim],name='trans_weight')
         # dropout
         if self.sparse_inputs:
             x = sparse_dropout(x, 1-self.dropout, self.num_features_nonzero)
@@ -176,7 +178,7 @@ class GraphConvolution(Layer):
                 pre_sup = dot(x, self.vars['weights_' + str(i)],
                               sparse=self.sparse_inputs)
             else:
-                pre_sup = self.vars['weights_' + str(i)]
+                pre_sup = self.vars['weights_' + str(i)]              
             support = dot(self.support[i], pre_sup, sparse=True)
             supports.append(support)
         output = tf.add_n(supports)
@@ -184,5 +186,7 @@ class GraphConvolution(Layer):
         # bias
         if self.bias:
             output += self.vars['bias']
-
-        return self.act(output)
+        # short_cut
+        short_cut = dot(x, self.vars['trans_weight'], sparse=self.sparse_inputs)  
+        return self.act(output) + short_cut
+        # return self.act(output)

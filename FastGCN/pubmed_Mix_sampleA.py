@@ -68,7 +68,7 @@ def main(rank1):
 
 
     numNode_train = adj_train.shape[0]
-    print("numNode: ", numNode)
+    print("numNode_train: ", numNode_train)
 
 
     if FLAGS.model == 'gcn_mix':

@@ -1,6 +1,8 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import tensorflow as tf
+import numpy as np
+
 
 x =2
 y =3
@@ -21,6 +23,11 @@ e = tf.Variable([[0,1], [2,3]], name='matrix')
 W = tf.Variable(tf.random_uniform([784, 10]), name='weight')
 assign_op = d.assign(100)
 
+ap = tf.placeholder(tf.float16, shape=[2,3],name='weight1')
+bc = tf.constant(1, tf.float16,name='bc')
+cp = ap + bc
+
+
 # writer = tf.summary.FileWriter('../graphs', tf.get_default_graph())
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
@@ -31,5 +38,6 @@ with tf.Session() as sess:
     print(W.eval())
     print(z, not_useless)
     print(type(outc))
+    print(sess.run(cp, feed_dict={ap: np.random.random([2,3])}))
 
 # writer.close()

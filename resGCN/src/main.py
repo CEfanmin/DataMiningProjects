@@ -9,7 +9,6 @@ from models import GCN
 
 # Set random seed
 seed = 123
-np.random.seed(seed)
 tf.set_random_seed(seed)
 
 # Settings
@@ -21,23 +20,23 @@ flags.DEFINE_float('learning_rate', 0.01, 'Initial learning rate')
 flags.DEFINE_integer('epochs', 200, 'number of epoch to train')
 flags.DEFINE_integer('hidden1', 16, 'number of units in hidden layer1')
 flags.DEFINE_integer('hidden2', 16, 'number of units in hidden layer2')
-flags.DEFINE_integer('hidden3', 16, 'number of units in hidden layer3')
+flags.DEFINE_integer('hidden3', 8, 'number of units in hidden layer3')
 flags.DEFINE_float('dropout', 0.5, 'dropout rate')
 flags.DEFINE_float('weight_decay', 5e-4, 'Weight for L2 loss on embedding matrix.')
 flags.DEFINE_integer('early_stopping', 10, 'Tolerance for early stopping (# of epochs).')
 flags.DEFINE_integer('max_degree', 3, 'Maximum Chebyshev polynomial degree.')
 
 # Load data
-adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask = load_data(FLAGS.dataset)
+adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask, laplacian = load_data(FLAGS.dataset)
 
 # Some preprocessing
 features = preprocess_features(features)
 
 if FLAGS.model == 'resGCN':
     support = [preprocess_adj(adj)]
+    # support = [preprocess_lap(laplacian)]
     num_supports = 1
     model_func = GCN
-
 else:
     pass
 
@@ -55,6 +54,7 @@ placeholders = {
 model = model_func(placeholders, input_dim=features[2][1], logging=True)
 
 # Initialize session
+writer = tf.summary.FileWriter('../graphs', tf.get_default_graph())
 sess = tf.Session()
 
 # Define model evaluation function

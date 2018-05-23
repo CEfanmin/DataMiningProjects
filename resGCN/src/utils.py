@@ -19,6 +19,19 @@ def sample_mask(idx, l):
 def load_data(dataset):
     """
     loads input data from data files
+    ind.dataset_str.x => the feature vectors of the training instances as scipy.sparse.csr.csr_matrix object;
+    ind.dataset_str.tx => the feature vectors of the test instances as scipy.sparse.csr.csr_matrix object;
+    ind.dataset_str.allx => the feature vectors of both labeled and unlabeled training instances
+        (a superset of ind.dataset_str.x) as scipy.sparse.csr.csr_matrix object;
+    ind.dataset_str.y => the one-hot labels of the labeled training instances as numpy.ndarray object;
+    ind.dataset_str.ty => the one-hot labels of the test instances as numpy.ndarray object;
+    ind.dataset_str.ally => the labels for instances in ind.dataset_str.allx as numpy.ndarray object;
+    ind.dataset_str.graph => a dict in the format {index: [index_of_neighbor_nodes]} as collections.defaultdict
+        object;
+    ind.dataset_str.test.index => the indices of test instances in graph, for the inductive setting as list object.
+    all objects above must be saved using python pickle module.
+    :param dataset_str: Dataset name
+    :return: All data input files loaded (as well the training/test data)
     """
     names = ['x', 'y', 'tx', 'ty', 'allx', 'ally', 'graph']
     objects = []
@@ -36,6 +49,7 @@ def load_data(dataset):
     features = sp.vstack((allx, tx)).tolil()
     features[test_idx_reorder,:] = features[test_idx_range, :]
     adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph))
+    laplacian = nx.laplacian_matrix(nx.from_dict_of_lists(graph))
 
     labels = np.vstack((ally, ty))
     labels[test_idx_reorder, :] = labels[test_idx_range, :]
@@ -55,7 +69,7 @@ def load_data(dataset):
     y_val[val_mask, :] = labels[val_mask, :]
     y_test[test_mask, :] = labels[test_mask, :]
 
-    return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask
+    return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask, laplacian
 
 
 def sparse_to_tuple(sparse_mx):
@@ -99,13 +113,20 @@ def normalize_adj(adj):
     d_mat_inv_sqrt = sp.diags(d_inv_sqrt)
     return adj.dot(d_mat_inv_sqrt).transpose().dot(d_mat_inv_sqrt).tocoo()
 
-
 def preprocess_adj(adj):
-    """Preprocessing of adjacency matrix for simple GCN model 
+    """
+    Preprocessing of adjacency matrix for simple GCN model 
     and conversion to tuple representation
     """
     adj_normalized = normalize_adj(adj + sp.eye(adj.shape[0]))
     return sparse_to_tuple(adj_normalized)
+
+def preprocess_lap(lap):
+    """
+    Preprocessing of laplacian matrix for simple resGCN model 
+    and conversion to tuple representation
+    """
+    return sparse_to_tuple(lap)
 
 def construct_feed_dict(features, support, labels, labels_mask, placeholders):
     """Construct feed dictionary."""

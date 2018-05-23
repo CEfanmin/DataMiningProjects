@@ -5,7 +5,7 @@ import tensorflow as tf
 from models import GAT
 from utils import process
 
-checkpt_file = 'pre_trained/cora/mod_cora.ckpt'
+checkpt_file = './pre_trained/cora/mod_cora.ckpt'
 
 dataset = 'cora'
 
@@ -83,7 +83,8 @@ with tf.Graph().as_default():
     vlss_mn = np.inf
     vacc_mx = 0.0
     curr_step = 0
-
+    
+    writer = tf.summary.FileWriter('./graphs', tf.get_default_graph())
     with tf.Session() as sess:
         sess.run(init_op)
 
@@ -170,5 +171,5 @@ with tf.Graph().as_default():
             ts_step += 1
 
         print('Test loss:', ts_loss/ts_step, '; Test accuracy:', ts_acc/ts_step)
-
+        writer.close()
         sess.close()

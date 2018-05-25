@@ -31,14 +31,12 @@ def visulization(feature_data, label_class):
         ].plot(
             kind='scatter',x='x1',y='x2', color=sns.color_palette('husl', 7)[c],label='class %d' % c, ax =ax
         )
-
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-    # plt.scatter(visualized_features['x1'], visualized_features['x2'],marker='o',s=150)
     plt.title('first layer embedded features')
     plt.xlabel('1st feature')
     plt.ylabel('2nd feature')
     plt.show()
 
 
-feature_data, label_class = load_data('./data/1rd_layer_output.csv', './data/label.csv')
+feature_data, label_class = load_data('./data/1rd_layer_output_2000.csv', './data/label.csv')
 visulization(feature_data, label_class)

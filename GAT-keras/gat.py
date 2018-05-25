@@ -57,10 +57,6 @@ model.compile(optimizer=optimizer,
               weighted_metrics=['acc'])
 model.summary()
 
-# build new model for 1rd_layer output
-get_1rd_layer_output = K.function([model.layers[0].input],
-                                  [model.layers[0].output])
-layer_output = get_1rd_layer_output([X, A])[0]
 
 # Callbacks
 es_callback = EarlyStopping(monitor='val_weighted_acc', patience=es_patience)
@@ -90,8 +86,11 @@ print('Done.\n'
       'Test loss: {}\n'
       'Test accuracy: {}'.format(*eval_results))
 
+# build new model for 1rd_layer output
+get_1rd_layer_output = Model(inputs=model.input,  
+                        outputs=model.get_layer('graph_attention_1').output) 
+layer_output = get_1rd_layer_output.predict([X,A], batch_size=N)
 
 print("layer_output shape is:", len(layer_output))
-np.savetxt("./data/1rd_layer_output.csv", layer_output, delimiter=",")
-
+np.savetxt("./data/1rd_layer_output_2000.csv", np.array(layer_output), delimiter=",")
 # np.savetxt("./data/label.csv", Y_test, delimiter=",")

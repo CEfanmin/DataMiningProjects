@@ -12,7 +12,6 @@ All functions are taken verbatim from https://github.com/tkipf/keras-gcn
 or https://github.com/tkipf/gcn
 """
 
-
 def parse_index_file(filename):
     """Parse index file."""
     index = []

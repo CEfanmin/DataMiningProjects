@@ -1,15 +1,17 @@
 from __future__ import division
 import numpy as np
-import os
+import os, time
 os.environ['KERAS_BACKEND']='tensorflow'
 from keras.callbacks import EarlyStopping, TensorBoard
 from keras.layers import Input, Dropout
-from keras.models import Model
+from keras.models import Model, load_model
 from keras.optimizers import Adam
 from keras.regularizers import l2
-
+import pandas as pd
 from graph_attention_layer import GraphAttention
 from utils import load_data
+from keras import backend as K
+
 
 # Read data
 A, X, Y_train, Y_val, Y_test, idx_train, idx_val, idx_test = load_data('cora')
@@ -27,7 +29,7 @@ epochs = 2000                 # Number of epochs to run for
 es_patience = 100             # Patience fot early stopping
 
 # Preprocessing operations
-X /= X.sum(1).reshape(-1, 1)
+X /= X.sum(axis=1).reshape(-1, 1)  # feature normalization
 A = A + np.eye(A.shape[0])  # Add self-loops
 
 # Model definition (as per Section 3.3 of the paper)
@@ -55,10 +57,16 @@ model.compile(optimizer=optimizer,
               weighted_metrics=['acc'])
 model.summary()
 
+# build new model for 1rd_layer output
+get_1rd_layer_output = K.function([model.layers[0].input],
+                                  [model.layers[0].output])
+layer_output = get_1rd_layer_output([X, A])[0]
+
 # Callbacks
 es_callback = EarlyStopping(monitor='val_weighted_acc', patience=es_patience)
 tb_callback = TensorBoard(batch_size=N)
 
+start_time = time.time()
 # Train model
 validation_data = ([X, A], Y_val, idx_val)
 model.fit([X, A],
@@ -69,6 +77,8 @@ model.fit([X, A],
           validation_data=validation_data,
           shuffle=False,  # Shuffling data means shuffling the whole graph
           callbacks=[es_callback, tb_callback])
+end_time = time.time()-start_time
+print("cost time is: ",end_time)
 
 # Evaluate model
 eval_results = model.evaluate([X, A],
@@ -79,3 +89,9 @@ eval_results = model.evaluate([X, A],
 print('Done.\n'
       'Test loss: {}\n'
       'Test accuracy: {}'.format(*eval_results))
+
+
+print("layer_output shape is:", len(layer_output))
+np.savetxt("./data/1rd_layer_output.csv", layer_output, delimiter=",")
+
+# np.savetxt("./data/label.csv", Y_test, delimiter=",")

@@ -11,7 +11,7 @@ dataset = 'cora'
 
 # training params
 batch_size = 1
-nb_epochs = 100000
+nb_epochs = 1
 patience = 100
 lr = 0.005  # learning rate
 l2_coef = 0.0005  # weight decay
@@ -68,6 +68,7 @@ with tf.Graph().as_default():
                                 bias_mat=bias_in,
                                 hid_units=hid_units, n_heads=n_heads,
                                 residual=residual, activation=nonlinearity)
+    
     log_resh = tf.reshape(logits, [-1, nb_classes])
     lab_resh = tf.reshape(lbl_in, [-1, nb_classes])
     msk_resh = tf.reshape(msk_in, [-1])
@@ -87,7 +88,7 @@ with tf.Graph().as_default():
     writer = tf.summary.FileWriter('./graphs', tf.get_default_graph())
     with tf.Session() as sess:
         sess.run(init_op)
-
+        
         train_loss_avg = 0
         train_acc_avg = 0
         val_loss_avg = 0

@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-
+import numpy as np
 from keras import backend as K
 from keras import activations, constraints, initializers, regularizers
 from keras.layers import Layer, Dropout, LeakyReLU
@@ -8,7 +8,7 @@ from keras.layers import Layer, Dropout, LeakyReLU
 class GraphAttention(Layer):
 
     def __init__(self,
-                 F_,
+                 F_=8,
                  attn_heads=1,
                  attn_heads_reduction='concat',  # {'concat', 'average'}
                  attn_dropout=0.5,
@@ -82,7 +82,7 @@ class GraphAttention(Layer):
     def call(self, inputs):
         X = inputs[0]  # Node features (N x F)
         A = inputs[1]  # Adjacency matrix (N x N)
-
+        
         outputs = []
         for head in range(self.attn_heads):
             kernel = self.kernels[head]  # W in the paper (F x F')
@@ -109,7 +109,7 @@ class GraphAttention(Layer):
             # Feed masked values to softmax
             softmax = K.softmax(masked)  # (N x N), attention coefficients
             dropout = Dropout(self.attn_dropout)(softmax)  # (N x N)
-
+            
             # Linear combination with neighbors' features
             node_features = K.dot(dropout, linear_transf_X)  # (N x F')
 
@@ -119,10 +119,10 @@ class GraphAttention(Layer):
 
             # Add output of attention head to final output
             outputs.append(node_features)
-
+        
         # Reduce the attention heads output according to the reduction method
         if self.attn_heads_reduction == 'concat':
-            output = K.concatenate(outputs)  # (N x KF')
+            output = K.concatenate(outputs)  # (N x KF')          
         else:
             output = K.mean(K.stack(outputs), axis=0)  # N x F')
             if self.activation is not None:

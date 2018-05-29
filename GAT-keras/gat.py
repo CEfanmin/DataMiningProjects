@@ -14,7 +14,7 @@ from keras import backend as K
 
 
 # Read data
-A, X, Y_train, Y_val, Y_test, idx_train, idx_val, idx_test = load_data('cora')
+A, X, Y_train, Y_val, Y_test, idx_train, idx_val, idx_test, Lap= load_data('cora')
 
 # Parameters
 N = X.shape[0]                # Number of nodes in the graph
@@ -31,7 +31,7 @@ es_patience = 100             # Patience fot early stopping
 # Preprocessing operations
 X /= X.sum(axis=1).reshape(-1, 1)  # feature normalization
 A = A + np.eye(A.shape[0])  # Add self-loops
-
+# A = Lap + np.eye(Lap.shape[0])
 # Model definition (as per Section 3.3 of the paper)
 X_in = Input(shape=(F,))
 A_in = Input(shape=(N,))
@@ -85,7 +85,7 @@ eval_results = model.evaluate([X, A],
 print('Done.\n'
       'Test loss: {}\n'
       'Test accuracy: {}'.format(*eval_results))
-
+'''
 # build new model for 1rd_layer output
 get_1rd_layer_output = Model(inputs=model.input,  
                         outputs=model.get_layer('graph_attention_1').output) 
@@ -94,3 +94,4 @@ layer_output = get_1rd_layer_output.predict([X,A], batch_size=N)
 print("layer_output shape is:", len(layer_output))
 np.savetxt("./data/1rd_layer_output_2000.csv", np.array(layer_output), delimiter=",")
 # np.savetxt("./data/label.csv", Y_test, delimiter=",")
+'''

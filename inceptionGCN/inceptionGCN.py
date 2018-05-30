@@ -15,14 +15,14 @@ from graph_conv_layer import GraphConvolution
 from keras.layers.merge import add
 
 # Read data
-A, X, Y_train, Y_val, Y_test, idx_train, idx_val, idx_test, Lap= load_data('cora')
+A, X, Y_train, Y_val, Y_test, idx_train, idx_val, idx_test = load_data('cora')
 
 # Parameters
 N = X.shape[0]                # Number of nodes in the graph
 F = X.shape[1]                # Original feature dimesnionality
 n_classes = Y_train.shape[1]  # Number of classes
 F_ = 8                        # Output dimension of first GraphAttention layer
-n_attn_heads = 3              # Number of attention heads in first GAT layer
+n_attn_heads = 2              # Number of attention heads in first GAT layer
 dropout_rate = 0.6            # Dropout rate applied to the input of GAT layers
 l2_reg = 5e-4                 # Regularization rate for l2
 learning_rate = 5e-3          # Learning rate for SGD
@@ -47,12 +47,6 @@ graph_attention_1 = GraphAttention(F_,
                                    kernel_regularizer=l2(l2_reg))([dropout1, A_in])
 dropout2 = Dropout(dropout_rate)(graph_attention_1)
 
-# H = Dropout(0.5)(X_in)
-# H = GraphConvolution(16, 1, activation='relu', kernel_regularizer=l2(5e-4))([H, A_in])
-# H1 = Dropout(0.5)(H)
-
-# shortcut1 = add([dropout2, H1])
-
 # layer2
 graph_attention_2 = GraphAttention(n_classes,
                                    attn_heads=1,
@@ -62,11 +56,11 @@ graph_attention_2 = GraphAttention(n_classes,
 
 H2 = GraphConvolution(n_classes, 1, activation='softmax')([dropout2, A_in])
 
-shortcut2 = add([graph_attention_2, H2])
+aggregation = add([graph_attention_2, H2])
 
 
 # Build model
-model = Model(inputs=[X_in, A_in], outputs=shortcut2)
+model = Model(inputs=[X_in, A_in], outputs=aggregation)
 optimizer = Adam(lr=learning_rate)
 model.compile(optimizer=optimizer,
               loss='categorical_crossentropy',

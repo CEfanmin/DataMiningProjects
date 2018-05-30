@@ -12,6 +12,7 @@ All functions are taken verbatim from https://github.com/tkipf/keras-gcn
 or https://github.com/tkipf/gcn
 """
 
+
 def parse_index_file(filename):
     """Parse index file."""
     index = []
@@ -60,7 +61,7 @@ def load_data(dataset_str):
     features = sp.vstack((allx, tx)).tolil()
     features[test_idx_reorder, :] = features[test_idx_range, :]
     adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph))
-    Laplacian = nx.laplacian_matrix(nx.from_dict_of_lists(graph))
+    laplacian = nx.laplacian_matrix(nx.from_dict_of_lists(graph))
 
     labels = np.vstack((ally, ty))
     labels[test_idx_reorder, :] = labels[test_idx_range, :]
@@ -80,7 +81,7 @@ def load_data(dataset_str):
     y_val[val_mask, :] = labels[val_mask, :]
     y_test[test_mask, :] = labels[test_mask, :]
 
-    return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask, Laplacian
+    return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask, laplacian
 
 
 def categorical_crossentropy(preds, labels):

@@ -90,7 +90,6 @@ print('Done.\n'
 get_1rd_layer_output = Model(inputs=model.input,  
                         outputs=model.get_layer('graph_attention_1').output) 
 layer_output = get_1rd_layer_output.predict([X,A], batch_size=N)
-
 print("layer_output shape is:", len(layer_output))
 np.savetxt("./data/1rd_layer_output_2000.csv", np.array(layer_output), delimiter=",")
 # np.savetxt("./data/label.csv", Y_test, delimiter=",")

@@ -228,7 +228,7 @@ class GCN_APPRO(Model):
         return tf.nn.softmax(self.outputs)
 
 
-class GCN_APPRO_Mix(Model): #mixture of dense and gcn
+class GCN_APPRO_Mix(Model): # mixture of dense and gcn
     def __init__(self, placeholders, input_dim, **kwargs):
         super(GCN_APPRO_Mix, self).__init__(**kwargs)
         self.inputs = placeholders['AXfeatures']# A*X for the bottom layer, not original feature X

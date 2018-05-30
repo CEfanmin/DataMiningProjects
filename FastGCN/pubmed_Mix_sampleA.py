@@ -17,7 +17,7 @@ tf.set_random_seed(seed)
 # Settings
 flags = tf.app.flags
 FLAGS = flags.FLAGS
-flags.DEFINE_string('dataset', 'pubmed', 'Dataset string.')  # 'cora', 'citeseer', 'pubmed'
+flags.DEFINE_string('dataset', 'cora', 'Dataset string.')  # 'cora', 'citeseer', 'pubmed'
 flags.DEFINE_string('model', 'gcn_mix', 'Model string.')  # 'gcn_mix', 'gcn_appr'
 flags.DEFINE_float('learning_rate', 0.01, 'Initial learning rate.')
 flags.DEFINE_integer('epochs', 200, 'Number of epochs to train.')
@@ -52,7 +52,7 @@ def iterate_minibatches_listinputs(inputs, batchsize, shuffle=False):
 
 def main(rank1):
 
-    adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask = load_data(FLAGS.dataset)
+    adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask = load_data_original(FLAGS.dataset)
 
     train_index = np.where(train_mask)[0]
     adj_train = adj[train_index, :][:, train_index]
@@ -187,12 +187,12 @@ def main(rank1):
     test_cost, test_acc, test_duration = evaluate(test_features, testSupport, y_test,
                                                   placeholders)
     print("rank1 = {}".format(rank1), "cost=", "{:.5f}".format(test_cost),
-          "accuracy=", "{:.5f}".format(test_acc), "training time per epoch=", "{:.5f}".format(train_duration/(epoch+1)),
+          "accuracy=", "{:.5f}".format(test_acc), "training time", "{:.5f}".format(train_duration),
           "test time=", "{:.5f}".format(test_duration))
 
 if __name__=="__main__":
     print("DATASET:", FLAGS.dataset)
     # main(None)
-    main(50)
-    # for k in [25, 50, 100, 200, 400]:
-    #     main(k)
+    # main(50)
+    for k in [25, 50, 100, 200, 400]:
+        main(k)

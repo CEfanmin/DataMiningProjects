@@ -67,12 +67,12 @@ def load_data(dataset_str):
 
     idx_test = test_idx_range.tolist()
     # semi-supervised setting 
-    # idx_train = range(len(y))
-    # idx_val = range(len(y), len(y)+500)
+    idx_train = range(len(y))
+    idx_val = range(len(y), len(y)+500)
     
     # supervised learning scenario
-    idx_train = range(len(ally)-500)
-    idx_val = range(len(ally)-500, len(ally))
+    # idx_train = range(len(ally)-500)
+    # idx_val = range(len(ally)-500, len(ally))
 
     train_mask = sample_mask(idx_train, labels.shape[0])
     val_mask = sample_mask(idx_val, labels.shape[0])

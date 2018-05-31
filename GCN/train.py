@@ -20,7 +20,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('dataset', 'cora', 'Dataset string.')  # 'cora', 'citeseer', 'pubmed'
 flags.DEFINE_string('model', 'gcn', 'Model string.')  # 'gcn', 'gcn_cheby', 'dense'
 flags.DEFINE_float('learning_rate', 0.01, 'Initial learning rate.')
-flags.DEFINE_integer('epochs', 200, 'Number of epochs to train.')
+flags.DEFINE_integer('epochs', 500, 'Number of epochs to train.')
 flags.DEFINE_integer('hidden1', 16, 'Number of units in hidden layer 1.')
 flags.DEFINE_integer('hidden2', 8, 'Number of units in hidden layer 1.')
 flags.DEFINE_integer('hidden3', 8, 'Number of units in hidden layer 1.')
@@ -35,7 +35,7 @@ adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask = load_da
 # Some preprocessing
 features = preprocess_features(features)
 if FLAGS.model == 'gcn':
-    support = [preprocess_adj(adj)]
+    support = [H_preprocess_adj(adj)]
     num_supports = 1
     model_func = GCN
 elif FLAGS.model == 'gcn_cheby':

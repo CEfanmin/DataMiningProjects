@@ -33,6 +33,7 @@ es_patience = 100             # Patience fot early stopping
 X /= X.sum(axis=1).reshape(-1, 1)  # feature normalization
 A = A + np.eye(A.shape[0])  # Add self-loops
 # A = Lap + np.eye(Lap.shape[0])
+
 # Model definition (as per Section 3.3 of the paper)
 X_in = Input(shape=(F,))
 A_in = Input(shape=(N,))
@@ -45,16 +46,16 @@ graph_attention_1 = GraphAttention(F_,
                                    attn_heads_reduction='concat',
                                    activation='elu',
                                    kernel_regularizer=l2(l2_reg))([dropout1, A_in])
-dropout2 = Dropout(dropout_rate)(graph_attention_1)
+layer1_out = Dropout(dropout_rate)(graph_attention_1)
 
 # layer2
 graph_attention_2 = GraphAttention(n_classes,
                                    attn_heads=1,
                                    attn_heads_reduction='average',
                                    activation='softmax',
-                                   kernel_regularizer=l2(l2_reg))([dropout2, A_in])
+                                   kernel_regularizer=l2(l2_reg))([layer1_out, A_in])
 
-H2 = GraphConvolution(n_classes, 1, activation='softmax')([dropout2, A_in])
+H2 = GraphConvolution(n_classes, 1, activation='softmax')([layer1_out, A_in])
 
 aggregation = add([graph_attention_2, H2])
 

@@ -134,6 +134,18 @@ def preprocess_adj(adj):
     adj_normalized = normalize_adj(adj + sp.eye(adj.shape[0]))
     return sparse_to_tuple(adj_normalized)
 
+def H_preprocess_adj(adj):
+    """
+    hight order A test
+    """
+    I = np.eye(adj.shape[0])
+    two_order = np.multiply(adj, adj)
+    three_order = np.multiply(two_order, adj)
+    six_order = np.multiply(three_order, three_order)
+    no_adj = np.minimum(six_order + I, 1)
+    adj_normalized = normalize_adj(no_adj)
+    return sparse_to_tuple(adj_normalized)
+
 
 def construct_feed_dict(features, support, labels, labels_mask, placeholders):
     """Construct feed dictionary."""

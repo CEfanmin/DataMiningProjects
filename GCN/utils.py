@@ -68,6 +68,7 @@ def load_data(dataset_str):
     features = sp.vstack((allx, tx)).tolil()
     features[test_idx_reorder, :] = features[test_idx_range, :]
     adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph))
+    laplacian = nx.laplacian_matrix(nx.from_dict_of_lists(graph))
 
     labels = np.vstack((ally, ty))
     labels[test_idx_reorder, :] = labels[test_idx_range, :]
@@ -87,7 +88,7 @@ def load_data(dataset_str):
     y_val[val_mask, :] = labels[val_mask, :]
     y_test[test_mask, :] = labels[test_mask, :]
 
-    return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask
+    return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask, laplacian
 
 
 def sparse_to_tuple(sparse_mx):
@@ -134,15 +135,19 @@ def preprocess_adj(adj):
     adj_normalized = normalize_adj(adj + sp.eye(adj.shape[0]))
     return sparse_to_tuple(adj_normalized)
 
+# def preprocess_lap(lap, lap_res):
+#     lap_hat = lap + 0.1 * lap_res
+#     return lap_hat
+
+
 def H_preprocess_adj(adj):
     """
-    hight order A test
+    high order A test
     """
     I = np.eye(adj.shape[0])
-    two_order = np.multiply(adj, adj)
-    three_order = np.multiply(two_order, adj)
-    six_order = np.multiply(three_order, three_order)
-    no_adj = np.minimum(six_order + I, 1)
+    two_order = np.dot(adj, adj)
+    # three_order = np.dot(two_order, adj)
+    no_adj = np.minimum(two_order + I, 1)
     adj_normalized = normalize_adj(no_adj)
     return sparse_to_tuple(adj_normalized)
 

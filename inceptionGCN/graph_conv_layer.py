@@ -66,7 +66,6 @@ class GraphConvolution(Layer):
     def call(self, inputs, mask=None):
         features = inputs[0]
         basis = inputs[1:]
-
         supports = list()
         for i in range(self.support):
             supports.append(K.dot(basis[i], features))

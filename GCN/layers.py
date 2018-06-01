@@ -186,7 +186,5 @@ class GraphConvolution(Layer):
         # bias
         if self.bias:
             output += self.vars['bias']
-        # short_cut
-        short_cut = dot(x, self.vars['trans_weight'], sparse=self.sparse_inputs)  
-        return self.act(output) + short_cut
+        return output
         # return self.act(output)

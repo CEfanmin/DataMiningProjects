@@ -15,7 +15,7 @@ from graph_conv_layer import GraphConvolution
 from keras.layers.merge import add
 
 # Read data
-A, X, Y_train, Y_val, Y_test, idx_train, idx_val, idx_test = load_data('cora')
+A, X, Y_train, Y_val, Y_test, idx_train, idx_val, idx_test, lap = load_data('cora')
 
 # Parameters
 N = X.shape[0]                # Number of nodes in the graph
@@ -55,7 +55,7 @@ graph_attention_2 = GraphAttention(n_classes,
                                    activation='softmax',
                                    kernel_regularizer=l2(l2_reg))([layer1_out, A_in])
 
-H2 = GraphConvolution(n_classes, 1, activation='softmax')([layer1_out, A_in])
+H2 = GraphConvolution(n_classes, 1, activation='softmax')([layer1_out,A_in])
 
 aggregation = add([graph_attention_2, H2])
 

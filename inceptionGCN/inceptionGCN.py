@@ -37,7 +37,7 @@ A = A + np.eye(A.shape[0])  # Add self-loops
 # Model definition (as per Section 3.3 of the paper)
 X_in = Input(shape=(F,))
 A_in = Input(shape=(N,))
-G = [Input(shape=(None, None), batch_shape=(None, None), sparse=False)]
+
 
 # layer1
 dropout1 = Dropout(dropout_rate)(X_in)
